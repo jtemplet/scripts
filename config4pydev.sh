@@ -2,22 +2,46 @@
 
 PROJ_FILE=".project"
 PYDEV_FILE=".pydevproject"
+SRC_DIR="src"
+RSRC_DIR="resources"
 workingdir=$(pwd)
 project=${workingdir##*/}
 
-if [ -a src ]; then
+# Create a src directory
+if [ -a $SRC_DIR ]; then
   echo "'src' already directory exists"
 else
-  mkdir src
+  mkdir $SRC_DIR
 fi
-if [ -a resources ]; then
+
+# Create a resources directory
+if [ -a $RSRC_DIR ]; then
   echo "'resources' already directory exists"
 else
-  mkdir resources
+  mkdir $RSRC_DIR
 fi
-if [ -e *.py ]; then
+
+# Move all the python files into the src directory
+files=$(ls *.py 2> /dev/null | wc -l)
+if [ "$files" != "0" ]; then
   mv *.py src
 fi
+
+# Remove all the *.pyc files
+files=$(ls *.pyc 2> /dev/null | wc -l)
+if [ "$files" != "0" ]; then
+  rm *.pyc
+fi
+
+# Move all directories (except src and resources) into src
+for f in *
+do
+  if [ -d $f ]; then
+    if [ $f != $SRC_DIR ] && [ $f != $RSRC_DIR ]; then
+      mv $f $SRC_DIR 
+    fi
+  fi
+done
 
 ##################################
 #
