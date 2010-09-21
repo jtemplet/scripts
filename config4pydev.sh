@@ -2,6 +2,8 @@
 
 PROJ_FILE=".project"
 PYDEV_FILE=".pydevproject"
+workingdir=$(pwd)
+project=${workingdir##*/}
 
 if [ -a src ]; then
   echo "'src' already directory exists"
@@ -25,7 +27,7 @@ fi
 
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > $PROJ_FILE
 echo "<projectDescription>" >> $PROJ_FILE
-echo "<name>$1</name>" >> $PROJ_FILE
+echo "<name>$project</name>" >> $PROJ_FILE
 echo "	<comment></comment>" >> $PROJ_FILE
 echo 	"<projects>" >> $PROJ_FILE
 echo	"</projects>" >> $PROJ_FILE
@@ -55,9 +57,9 @@ echo "<pydev_property name=\"org.python.pydev.PYTHON_PROJECT_INTERPRETER\">Defau
 echo "<pydev_property name=\"org.python.pydev.PYTHON_PROJECT_VERSION\">python 2.7</pydev_property> " >> $PYDEV_FILE
 echo "<pydev_variables_property name=\"org.python.pydev.PROJECT_VARIABLE_SUBSTITUTION\"> " >> $PYDEV_FILE
 echo "<key>DJANGO_MANAGE_LOCATION</key> " >> $PYDEV_FILE
-echo "<value>src/$1/manage.py</value> " >> $PYDEV_FILE
+echo "<value>src/$project/manage.py</value> " >> $PYDEV_FILE
 echo "</pydev_variables_property> " >> $PYDEV_FILE
 echo "<pydev_pathproperty name=\"org.python.pydev.PROJECT_SOURCE_PATH\"> " >> $PYDEV_FILE
-echo "<path>/$1/src</path> " >> $PYDEV_FILE
+echo "<path>/$project/src</path> " >> $PYDEV_FILE
 echo "</pydev_pathproperty> " >> $PYDEV_FILE
 echo "</pydev_project> " >> $PYDEV_FILE
