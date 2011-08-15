@@ -1,0 +1,1 @@
+sudo mount -t cifs //Ocean/Media -o username=Jason /mnt/Ocean-Music/
