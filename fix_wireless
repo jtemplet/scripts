@@ -1,8 +1,0 @@
-#!/bin/sh
-killall wpa_supplicant
-ifconfig wlan0 down
-ifconfig wlan0 0.0.0.0
-wpa_supplicant -B -i wlan0 -c /var/lib/wicd/configurations/001e2a1f47a4 -D wext
-ifconfig wlan0 up
-iwconfig wlan0 mode managed
-/sbin/dhclient wlan0

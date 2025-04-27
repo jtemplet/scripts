@@ -1,2 +1,0 @@
-cd /home/jtemplet/Development/rails_workspace/hinty
-QUEUE=start_channel,reload_channel,new_source_item,stop_channel rake environment resque:work &
