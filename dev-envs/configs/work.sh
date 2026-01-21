@@ -9,7 +9,7 @@ ITERM_PYTHON="$HOME/Library/Application Support/iTerm2/iterm2env-3.14/versions/3
   --vscode-workspace ~/Dev/loanlabs.ai/platform/loanlabs.code-workspace \
   --tabs "dev:Dev Server:app:./bin/dev" \
          "claude:Claude:.:claude-work && claude" \
-         "linear:Linear:.:linear issue list --mine --status 'In Progress' 'Todo'" \
+         "linear:Linear:.:linear-cli i list -a jason@loanlabs.ai" \
          "db:MariaDB:.:mysql -u root -p loan_os_development" \
          "test:Test/Lint:app:" \
          "beads:Beads:.:bd ready" \
