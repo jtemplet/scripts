@@ -1,8 +1,128 @@
 {
   "folders": [
     {
-      "path": "."
+      "path": ".",
+      "name": "Scripts"
     }
   ],
-  "settings": {}
+  "settings": {
+    // File associations
+    "files.associations": {
+      "*.fish": "shellscript",
+      "CLAUDE.md": "markdown",
+      "AGENTS.md": "markdown"
+    },
+
+    // Exclude from search/watch for performance
+    "files.exclude": {
+      "**/.git": true,
+      "**/.beads": true,
+      "**/.DS_Store": true,
+      "**/__pycache__": true,
+      "**/*.pyc": true,
+      "**/*.bak": true,
+      ".session-handoff.md": true
+    },
+
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/.git": true,
+      "**/.beads": true,
+      "**/__pycache__": true
+    },
+
+    // Markdown settings
+    "markdown.preview.breaks": true,
+    "markdown.preview.linkify": true,
+    "markdown.extension.toc.levels": "2..4",
+    "[markdown]": {
+      "editor.wordWrap": "on",
+      "editor.quickSuggestions": false
+    },
+
+    // Ruby settings
+    "ruby.format": "rubocop",
+    "ruby.lint": {
+      "rubocop": true
+    },
+
+    // Python settings
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": false,
+    "python.linting.flake8Enabled": true,
+    "python.formatting.provider": "black",
+
+    // Editor settings for consistency
+    "editor.rulers": [80, 120],
+    "editor.formatOnSave": false,
+    "editor.trimAutoWhitespace": true,
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+
+    // Git settings
+    "git.ignoreLimitWarning": true,
+
+    // Terminal
+    "terminal.integrated.defaultProfile.osx": "fish",
+    "terminal.integrated.scrollback": 10000
+  },
+
+  "extensions": {
+    "recommendations": [
+      "yzhang.markdown-all-in-one",
+      "davidanson.vscode-markdownlint",
+      "editorconfig.editorconfig",
+      "rebornix.ruby",
+      "ms-python.python",
+      "ms-python.vscode-pylance",
+      "redhat.vscode-yaml"
+    ]
+  },
+
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "bd: Ready Tasks",
+        "type": "shell",
+        "command": "bd ready",
+        "problemMatcher": [],
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        }
+      },
+      {
+        "label": "bd: Sync",
+        "type": "shell",
+        "command": "bd sync",
+        "problemMatcher": []
+      },
+      {
+        "label": "Make Script Executable",
+        "type": "shell",
+        "command": "chmod +x ${file}",
+        "problemMatcher": []
+      }
+    ]
+  },
+
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Ruby: Debug Current File",
+        "type": "Ruby",
+        "request": "launch",
+        "program": "${file}"
+      },
+      {
+        "name": "Python: Current File",
+        "type": "python",
+        "request": "launch",
+        "program": "${file}",
+        "console": "integratedTerminal"
+      }
+    ]
+  }
 }

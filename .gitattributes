@@ -1,0 +1,54 @@
+# Line ending normalization (critical for cross-platform shell scripts)
+* text=auto eol=lf
+
+# Explicitly declare text files
+*.rb text eol=lf
+*.py text eol=lf
+*.sh text eol=lf
+*.fish text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.haml text eol=lf
+
+# Documentation
+CLAUDE.md text eol=lf
+AGENTS.md text eol=lf
+README.md text eol=lf
+LICENSE text eol=lf
+
+# Shell scripts must be executable
+*.sh text eol=lf
+*.fish text eol=lf
+
+# Scripts in dev-envs/configs directory
+dev-envs/configs/*.sh text eol=lf
+
+# Language-specific diff patterns
+*.rb diff=ruby
+*.py diff=python
+*.md diff=markdown
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.db binary
+*.sqlite binary
+*.sqlite3 binary
+
+# Backup files (never diff these)
+*.bak binary
+
+# Beads integration - use custom merge strategy
+.beads/issues.jsonl merge=beads
+
+# Archive files
+*.zip binary
+*.tar binary
+*.gz binary
+*.tgz binary
+*.bz2 binary
