@@ -4,3 +4,8 @@ beads.db-*
 bd.sock
 bd.pipe
 .exclusive-lock
+
+# legacy bd runtime files
+.sync.lock
+last-touched
+sync_base.jsonl
