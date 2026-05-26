@@ -37,7 +37,11 @@
     "markdown.extension.toc.levels": "2..4",
     "[markdown]": {
       "editor.wordWrap": "on",
-      "editor.quickSuggestions": false
+      "editor.quickSuggestions": {
+        "comments": "off",
+        "strings": "off",
+        "other": "off"
+      }
     },
 
     // Ruby settings
@@ -85,7 +89,7 @@
       {
         "label": "bd: Ready Tasks",
         "type": "shell",
-        "command": "bd ready",
+        "command": "br ready",
         "problemMatcher": [],
         "presentation": {
           "reveal": "always",
@@ -95,7 +99,7 @@
       {
         "label": "bd: Sync",
         "type": "shell",
-        "command": "bd sync",
+        "command": "br sync",
         "problemMatcher": []
       },
       {

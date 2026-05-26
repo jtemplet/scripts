@@ -12,5 +12,5 @@ ITERM_PYTHON="$HOME/Library/Application Support/iTerm2/iterm2env-3.14/versions/3
          "linear:Linear:.:linear-cli i list -a jason@loanlabs.ai" \
          "db:MariaDB:.:mysql -u root -p loan_os_development" \
          "test:Test/Lint:app:" \
-         "beads:Beads:.:bd ready" \
+         "beads:Beads:.:br ready" \
          "general:General:.:"

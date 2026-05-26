@@ -1,1 +1,3 @@
 *.db
+.bv/
+.beads.backup
