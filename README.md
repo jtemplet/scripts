@@ -6,26 +6,29 @@ A collection of standalone utility scripts for streamlining various development 
 
 ### Development Environment Launcher (`dev-envs/`)
 
-Unified system for launching complete development environments. One Alfred command sets up iTerm2 with project-specific tabs and opens VSCode with the correct workspace.
+Unified system for launching complete development environments. One Alfred command sets up Ghostty (or iTerm2 for work) with project-specific tabs and opens VSCode with the correct workspace.
 
 **Why**: Eliminates the repetitive manual setup of opening multiple tabs, navigating to directories, and launching VSCode every time you start working on a project.
 
 See [dev-envs/CLAUDE.md](dev-envs/CLAUDE.md) for detailed documentation.
 
 **Usage via Alfred** (recommended):
+
 - `open work` - LoanLabs development (7 tabs: Dev Server, Claude, Linear, MariaDB, Test/Lint, Beads, General)
 - `open bodyledger` - Bodyledger iOS
-- `open hdw` - Health Data Warehouse
-- `open orryx` - Orryx
+- `open atlas` - Health Data Warehouse
+- `open compass` - Compass
 - `open scripts` - This repository
 
 **Usage via Terminal**:
+
 ```bash
 ~/local/src/scripts/dev-envs/configs/work.sh
 ~/local/src/scripts/dev-envs/configs/bodyledger.sh
 ```
 
 **Install Alfred Workflow**:
+
 ```bash
 open ~/local/src/scripts/dev-envs/alfred/dev-environments.alfredworkflow
 ```
@@ -61,7 +64,8 @@ See [CLAUDE.md](CLAUDE.md) for detailed architecture documentation.
 
 - **Ruby**: For `.rb` scripts
 - **Python 3**: For `.py` scripts
-- **iTerm2**: With Python API enabled (Preferences → General → Magic)
+- **Ghostty**: For personal project environments
+- **iTerm2**: With Python API enabled (Preferences → General → Magic) for the work environment
 - **Alfred** (with Powerpack): For `open <project>` workflow
 - **linear-cli**: `npm install -g @linear/cli` (for work environment Linear tab)
 - **Fish Shell**: For `.fish` scripts

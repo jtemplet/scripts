@@ -4,14 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Issue Tracking
 
-This project uses **bd** (beads) for issue tracking. Run `bd onboard` to get started.
+This project uses **bd** (beads) for issue tracking. Run `br onboard` to get started.
 
 ```bash
-bd ready              # Find available work
-bd show <id>          # View issue details
-bd update <id> --status in_progress  # Claim work
-bd close <id>         # Complete work
-bd sync               # Sync with git
+br ready              # Find available work
+br show <id>          # View issue details
+br update <id> --status in_progress  # Claim work
+br close <id>         # Complete work
+br sync               # Sync with git
 ```
 
 ## Session Completion
@@ -22,15 +22,18 @@ bd sync               # Sync with git
 2. **Run quality gates** (if code changed) - Tests, linters, builds
 3. **Update issue status** - Close finished work, update in-progress items
 4. **Push to remote**:
+
    ```bash
    git pull --rebase
-   bd sync
+   br sync
    git push
    git status  # MUST show "up to date with origin"
    ```
+
 5. **Verify** - All changes committed AND pushed
 
 **Rules:**
+
 - Work is NOT complete until `git push` succeeds
 - If push fails, resolve and retry until it succeeds
 
@@ -46,7 +49,7 @@ The codebase is organized by script purpose rather than by language:
 
 - **HAML/Tailwind utilities**: Ruby scripts for processing HAML files with Tailwind CSS
 - **Markdown utilities**: Python and Ruby scripts for analyzing and manipulating markdown files with YAML frontmatter
-- **Development environment automation**: Unified Alfred/terminal launcher for iTerm2 + VSCode environments
+- **Development environment automation**: Unified Alfred/terminal launcher for Ghostty + VSCode environments (personal projects) and iTerm2 + VSCode (work)
 - **Docker/GitHub utilities**: Shell and Fish scripts for container registry authentication
 - **Diff/merge tools**: Shell scripts for visual diff tools
 
@@ -73,13 +76,14 @@ Most scripts include usage instructions when run without arguments or with inval
 
 ### Development Environment Automation
 
-Located in `dev-envs/`, this unified system launches complete development environments via Alfred or terminal. One command sets up iTerm2 tabs and opens VSCode.
+Located in `dev-envs/`, this unified system launches complete development environments via Alfred or terminal. One command sets up Ghostty tabs and opens VSCode.
 
 **See [dev-envs/CLAUDE.md](dev-envs/CLAUDE.md) for documentation.**
 
 Usage via Alfred:
+
 - `open work` - LoanLabs development environment
-- `open bodyledger`, `open hdw`, `open orryx`, `open scripts` - Personal projects
+- `open bodyledger`, `open atlas`, `open compass`, `open scripts` - Personal projects
 
 Usage via terminal: `~/local/src/scripts/dev-envs/configs/work.sh`
 

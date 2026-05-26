@@ -2,10 +2,10 @@
 SCRIPT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
 python3 "$SCRIPT_DIR/ghostty_dev_env.py" \
-  --name "Fish Config" \
-  --project ~/local/src/fish_config \
+  --name "Compass" \
+  --project ~/Dev/compass \
   --profile personal \
-  --vscode-workspace ~/local/src/fish_config/fish_config.code-workspace \
+  --vscode-workspace ~/Dev/compass/compass.code-workspace \
   --tabs "claude:Claude:.:claude-personal && claude" \
          "git:Git:.:git status" \
          "test:Test/Lint:.:" \
