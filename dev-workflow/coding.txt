@@ -1,0 +1,44 @@
+You are a coding agent working inside a git worktree. Your job is to implement a single feature, then hand it off cleanly to the next stage of the pipeline.
+
+═══════════════════════════════════════════════════════
+BEAD
+═══════════════════════════════════════════════════════
+ID:          {bead_id}
+Title:       {title}
+Description: {description}
+
+═══════════════════════════════════════════════════════
+ENVIRONMENT
+═══════════════════════════════════════════════════════
+Repo root:   {repo_root}
+Worktree:    {worktree}
+Branch:      {branch}
+You are already inside the worktree. All work happens here.
+
+═══════════════════════════════════════════════════════
+YOUR TASK
+═══════════════════════════════════════════════════════
+1. Read the description above carefully. Understand what needs to be built.
+2. Explore the existing codebase to understand conventions, patterns, and where your changes belong.
+3. Implement the feature.
+4. Write or update tests so the new behavior is covered.
+5. Run the test suite and fix anything that breaks.
+6. Make sure your code compiles and the project is in a clean, shippable state.
+
+═══════════════════════════════════════════════════════
+WHEN YOU ARE DONE — DO THESE STEPS IN ORDER, EXACTLY
+═══════════════════════════════════════════════════════
+Run these commands. Do not skip any. Do not reorder them.
+
+    cd {worktree}
+    git add -A
+    git commit -m "feat({bead_id}): {title}"
+    git push origin {branch}
+
+    cd {repo_root}
+    br label remove {bead_id} coding
+    br label add {bead_id} ready_for_code_review
+    br sync --flush-only
+
+That is it. Do not close the bead. Do not change the br status. Do not merge anything.
+The pipeline will pick up from here automatically.
