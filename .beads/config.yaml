@@ -1,1 +1,3 @@
-# beads_rust config file
+issue-prefix: scripts
+sync:
+    remote: "git+ssh://git@github.com/jtemplet/scripts.git"
