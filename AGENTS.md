@@ -4,14 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Issue Tracking
 
-This project uses **bd** (beads) for issue tracking. Run `br onboard` to get started.
+This project uses **bd** (beads) for issue tracking. Run `bd onboard` to get started.
 
 ```bash
-br ready              # Find available work
-br show <id>          # View issue details
-br update <id> --status in_progress  # Claim work
-br close <id>         # Complete work
-br sync               # Sync with git
+bd ready              # Find available work
+bd show <id>          # View issue details
+bd update <id> --status in_progress  # Claim work
+bd close <id>         # Complete work
+bd dolt push          # Publish issues to the remote
 ```
 
 ## Session Completion
@@ -25,7 +25,7 @@ br sync               # Sync with git
 
    ```bash
    git pull --rebase
-   br sync
+   bd dolt push
    git push
    git status  # MUST show "up to date with origin"
    ```
