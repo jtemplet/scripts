@@ -19,7 +19,7 @@
 #   4. Removes the git worktree
 #   5. Deletes the feature branch (local + remote)
 #   6. Removes the "ready_for_review" label, closes the bead
-#   7. Syncs br to JSONL
+#   7. Refreshes the bd export (.beads/issues.jsonl)
 # ═══════════════════════════════════════════════════════════════════════════════
 
 set -euo pipefail
@@ -54,22 +54,22 @@ run() {
 cd "$REPO_ROOT"
 
 # ─── Validate ────────────────────────────────────────────────────────────────
-command -v br >/dev/null 2>&1 || { echo "ERROR: br not in PATH"; exit 1; }
+command -v bd >/dev/null 2>&1 || { echo "ERROR: bd not in PATH"; exit 1; }
 
-BEAD_INFO=$(br show "$BEAD_ID" --json 2>/dev/null) || {
+BEAD_INFO=$(bd show "$BEAD_ID" --json 2>/dev/null) || {
     echo "ERROR: Bead $BEAD_ID not found."
     exit 1
 }
 
-TITLE=$(printf '%s' "$BEAD_INFO" | jq -r '.title')
-LABELS=$(printf '%s' "$BEAD_INFO" | jq -r '.labels // [] | .[]')
+TITLE=$(printf '%s' "$BEAD_INFO" | jq -r '(.[0].title // .title)')
+LABELS=$(printf '%s' "$BEAD_INFO" | jq -r '((.[0].labels // .labels) // []) | .[]')
 BRANCH="feature/${BEAD_ID}-$(slugify "$TITLE")"
 WORKTREE="${WORKTREE_DIR}/${BEAD_ID}"
 
 # Check that this bead is actually in "ready_for_review"
 if ! printf '%s' "$LABELS" | grep -qx "ready_for_review"; then
     echo "ERROR: Bead $BEAD_ID does not have the 'ready_for_review' label."
-    echo "Labels: $(printf '%s' "$BEAD_INFO" | jq -c '.labels')"
+    echo "Labels: $(printf '%s' "$BEAD_INFO" | jq -c '(.[0].labels // .labels)')"
     echo "Only run this on beads that have completed QA."
     exit 1
 fi
@@ -101,9 +101,9 @@ run "git push origin main"
 run "git worktree remove '$WORKTREE' --force"
 run "git branch -D '$BRANCH'"
 run "git push origin --delete '$BRANCH'"
-run "br label remove $BEAD_ID ready_for_review"
-run "br update $BEAD_ID --status closed"
-run "br sync --flush-only"
+run "bd update $BEAD_ID --remove-label ready_for_review"
+run "bd close $BEAD_ID"
+run "bd export -o .beads/issues.jsonl"
 
 if [[ "$DRY_RUN" == false ]]; then
     printf '\n✅ %s merged, worktree removed, bead closed.\n' "$BEAD_ID"

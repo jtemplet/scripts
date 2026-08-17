@@ -28,16 +28,23 @@ for project in $projects
 
     cd $project
 
-    # Check if .beads/beads.db exists (br database)
-    if not test -f .beads/beads.db
-        echo -e "$RED  ⚠️  No beads.db found, skipping$NC"
+    # A bd repo keeps its database in one of three directory layouts, or
+    # declares itself in metadata.json. Never a .db file: that is the
+    # pre-cutover SQLite one bd init leaves behind.
+    if not test -d .beads/embeddeddolt -o -d .beads/dolt -o -d .beads/proxieddb
+        echo -e "$RED  ⚠️  No bd database found, skipping$NC"
         set skip_count (math $skip_count + 1)
         continue
     end
 
-    # Get prefix from br info
+    # bd info reports the database and a count, but not the prefix, and
+    # `bd config get issue-prefix` reads "(not set)" even where config.yaml
+    # defines it. Read the file, then fall back to a real issue id.
     echo "  [1/4] Detecting prefix..."
-    set -l prefix_output (br info 2>/dev/null | grep "Issue prefix" | awk '{print $3}')
+    set -l prefix_output (grep -E '^issue-prefix:' .beads/config.yaml 2>/dev/null | head -1 | sed -E 's/^issue-prefix:[[:space:]]*//')
+    if test -z "$prefix_output"
+        set prefix_output (bd list --all --json 2>/dev/null | jq -r '.[0].id // ""' | sed -E 's/-[^-]+$//')
+    end
 
     if test -z "$prefix_output"
         echo -e "$RED  ⚠️  Could not detect prefix, skipping$NC"
@@ -50,7 +57,7 @@ for project in $projects
 
     # Get issue count
     echo "  [2/4] Counting issues..."
-    set -l issue_count (br list --json 2>/dev/null | jq '. | length' 2>/dev/null)
+    set -l issue_count (bd list --all --json 2>/dev/null | jq '. | length' 2>/dev/null)
 
     if test -z "$issue_count"
         set issue_count "unknown"
@@ -67,18 +74,19 @@ for project in $projects
     echo "  [4/4] Creating workspace.yml..."
 
     echo "# beads_viewer workspace configuration
-# Generated automatically for beads_rust (br) compatibility
+# Generated automatically for bd (beads) repositories
 
 # Project metadata
 name: $project_name
 description: beads workspace for $project_name
 
-# Database configuration
+# Prefix only. bd keeps its database in .beads/embeddeddolt/, which is
+# gitignored and which bv cannot read; bv reads the JSONL export below.
 database:
-  path: .beads/beads.db
   prefix: $prefix
 
-# JSONL configuration
+# JSONL configuration. bd never refreshes this on its own, so it is only
+# as current as the last 'bd export -o .beads/issues.jsonl'.
 jsonl:
   path: .beads/issues.jsonl
 

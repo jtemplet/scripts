@@ -4,8 +4,8 @@
 # ═══════════════════════════════════════════════════════════════════════════════
 #
 # WHY LABELS, NOT CUSTOM STATUSES:
-#   br only supports 5 statuses: open | in_progress | blocked | deferred | closed
-#   We encode the pipeline stage in LABELS. The br status tracks coarse state;
+#   bd only supports 5 statuses: open | in_progress | blocked | deferred | closed
+#   We encode the pipeline stage in LABELS. The bd status tracks coarse state;
 #   the label tracks where in the pipeline the bead actually is.
 #
 # WORKFLOW & LABEL STATE MACHINE:
@@ -20,7 +20,7 @@
 #   dispatches     (ignored)          dispatches           (ignored)        dispatches     (ignored)            approves
 #   coding agent                      review agent                          QA agent                            → closed
 #
-#   br status:  open ──────▶ in_progress ──────────────────────────────────────────────────────────────────▶ closed
+#   bd status:  open ──────▶ in_progress ──────────────────────────────────────────────────────────────────▶ closed
 #
 # TRANSITIONS MADE BY AGENTS (at the end of their work):
 #   Coding agent:  removes "coding",            adds "ready_for_code_review"
@@ -85,7 +85,7 @@ branch_for() {
     # Derive branch name from bead ID + title
     local bead_id=$1
     local title
-    title=$(cd "$REPO_ROOT" && br show "$bead_id" --json | jq -r '.title')
+    title=$(cd "$REPO_ROOT" && bd show "$bead_id" --json | jq -r '(.[0].title // .title)')
     printf 'feature/%s-%s' "$bead_id" "$(slugify "$title")"
 }
 
@@ -144,8 +144,8 @@ render_prompt() {
     local bead_id=$2
     local info title branch description worktree
 
-    info=$(cd "$REPO_ROOT" && br show "$bead_id" --json)
-    title=$(printf '%s' "$info" | jq -r '.title')
+    info=$(cd "$REPO_ROOT" && bd show "$bead_id" --json)
+    title=$(printf '%s' "$info" | jq -r '(.[0].title // .title)')
     branch=$(branch_for "$bead_id")
     description=$(printf '%s' "$info" | jq -r '.description // "No description provided."')
     worktree=$(worktree_for "$bead_id")
@@ -224,9 +224,9 @@ handle_new() {
     fi
 
     # Transition: open → in_progress, add "coding" label
-    br update "$bead_id" --status in_progress
-    br label add "$bead_id" coding
-    br sync --flush-only 2>/dev/null || true
+    bd update "$bead_id" --status in_progress
+    bd update "$bead_id" --add-label coding
+    bd export -o .beads/issues.jsonl 2>/dev/null || true
 
     dispatch "$bead_id" "${PROMPT_DIR}/coding.txt"
 }
@@ -236,9 +236,9 @@ handle_code_review() {
     local bead_id=$1
     cd "$REPO_ROOT"
 
-    br label remove "$bead_id" ready_for_code_review
-    br label add "$bead_id" in_code_review
-    br sync --flush-only 2>/dev/null || true
+    bd update "$bead_id" --remove-label ready_for_code_review
+    bd update "$bead_id" --add-label in_code_review
+    bd export -o .beads/issues.jsonl 2>/dev/null || true
 
     dispatch "$bead_id" "${PROMPT_DIR}/code_review.txt"
 }
@@ -248,9 +248,9 @@ handle_qa() {
     local bead_id=$1
     cd "$REPO_ROOT"
 
-    br label remove "$bead_id" ready_for_qa
-    br label add "$bead_id" in_qa
-    br sync --flush-only 2>/dev/null || true
+    bd update "$bead_id" --remove-label ready_for_qa
+    bd update "$bead_id" --add-label in_qa
+    bd export -o .beads/issues.jsonl 2>/dev/null || true
 
     dispatch "$bead_id" "${PROMPT_DIR}/qa.txt"
 }
@@ -279,7 +279,7 @@ main() {
     [[ -f "${PROMPT_DIR}/code_review.txt" ]]  || { error "Missing: ${PROMPT_DIR}/code_review.txt"; exit 1; }
     [[ -f "${PROMPT_DIR}/qa.txt" ]]           || { error "Missing: ${PROMPT_DIR}/qa.txt"; exit 1; }
     [[ -d "$REPO_ROOT/.git" ]]        || { error "$REPO_ROOT is not a git repo"; exit 1; }
-    (cd "$REPO_ROOT" && br list --json >/dev/null 2>&1) || { error "br is not initialized in $REPO_ROOT"; exit 1; }
+    (cd "$REPO_ROOT" && bd list --json >/dev/null 2>&1) || { error "bd is not initialized in $REPO_ROOT"; exit 1; }
 
     while true; do
         # Reap stuck agents first
@@ -298,7 +298,7 @@ main() {
 
         # ── Fetch all issues in one shot ──────────────────────────────────
         local all_issues
-        all_issues=$(br list --json 2>/dev/null || echo '[]')
+        all_issues=$(bd list --all --json 2>/dev/null || echo '[]')
 
         # ── STAGE 2: ready_for_qa (later stages get priority) ─────────────
         local qa_ids
@@ -319,10 +319,10 @@ main() {
         done
 
         # ── STAGE 0: New open beads (unblocked, no workflow labels) ─────────
-        # br ready filters for open + unblocked. We additionally filter out
+        # bd ready filters for open + unblocked. We additionally filter out
         # any bead that already has a workflow label (already in the pipeline).
         local ready_ids
-        ready_ids=$(br ready --json 2>/dev/null | jq -r '
+        ready_ids=$(bd ready --json 2>/dev/null | jq -r '
             def workflow_labels: ["coding","ready_for_code_review","in_code_review","ready_for_qa","in_qa","ready_for_review"];
             .[] |
             select(
