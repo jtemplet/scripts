@@ -4,6 +4,18 @@ A collection of standalone utility scripts for streamlining various development 
 
 ## Contents
 
+### Mac Setup (`mac-setup/`)
+
+Brings a Mac to the full working environment in one command: Homebrew packages, the fish config, and the dotfile symlinks.
+
+**Why**: the fish config and the gitconfig call binaries by name and declare none of them, so a fresh Mac fails one command at a time. `bat` is the sharpest case — `binary_overrides.fish` aliases `cat` to it, so its absence breaks `cat` itself.
+
+```bash
+~/Dev/scripts/mac-setup/setup-machine.sh
+```
+
+See [mac-setup/README.md](mac-setup/README.md) for the order that works on a shared machine, and the traps worth remembering.
+
 ### Development Environment Launcher (`dev-envs/`)
 
 Unified system for launching complete development environments. One Alfred command sets up Ghostty (or iTerm2 for work) with project-specific tabs and opens VSCode with the correct workspace.
