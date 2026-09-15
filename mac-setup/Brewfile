@@ -1,0 +1,53 @@
+# Homebrew dependencies for Jason's shell environment.
+#
+#   brew bundle --file ~/Dev/scripts/mac-setup/Brewfile
+#
+# Every entry here is something a tracked config file calls by name. The point
+# is that the fish config and the gitconfig no longer have undeclared
+# dependencies: before this existed, a fresh machine failed one command at a
+# time, and one of those failures took the shell down with it.
+#
+# NOT here on purpose: node, bun, pnpm, ruby, terraform and the AWS CLI *for a
+# factory checkout*. Those are managed per-repo by mise, which `./lola
+# bootstrap` installs and pins from .tool-versions. Installing them again here
+# puts a second copy ahead of mise's shims in PATH and the repo silently builds
+# against the wrong one.
+
+tap "dicklesworthstone/tap" # bv
+
+# --- Shell ------------------------------------------------------------------
+brew "fish" # the login shell; install BEFORE chsh or the account cannot log in
+brew "tmux" # persistent sessions over ssh
+
+# --- Called directly by the fish config -------------------------------------
+brew "bat"       # functions/binary_overrides.fish aliases `cat` to it: without
+                 # bat, `cat` is broken everywhere, not merely unstyled
+brew "fzf"       # functions/wtrm.fish pipes the worktree list into it
+brew "coreutils" # supplies `timeout` and `gpr`
+brew "tree"
+brew "ripgrep"
+brew "fd"
+
+# --- Git --------------------------------------------------------------------
+brew "gh"        # also the git credential helper on machines with no SSH key
+brew "git-delta" # the [delta] section of dotfiles/gitconfig
+
+# --- Issue tracking ---------------------------------------------------------
+brew "beads"                   # provides both `bd` and `beads`
+brew "dicklesworthstone/tap/bv" # the `bv-health` alias in config.fish
+
+# --- AWS --------------------------------------------------------------------
+brew "awscli"    # functions/aws_contexts.fish: use-dev, use-qa, use-prod
+brew "aws-vault" # config.fish sets AWS_VAULT_KEYCHAIN_NAME
+
+# --- Ruby, on a machine that is not a factory checkout ----------------------
+# conf.d/rbenv.fish returns quietly when this is absent, so it is optional. Skip
+# it on a machine whose only Ruby work is a factory checkout, where mise owns
+# the version and rbenv's shims would sit in front of mise's.
+brew "rbenv"
+
+# --- Optional ---------------------------------------------------------------
+# brew "act"            # run GitHub Actions locally
+# brew "docker"         # CLI only
+# brew "docker-compose" # needs cliPluginsExtraDirs in ~/.docker/config.json
+# brew "colima"         # docker daemon without Docker Desktop
