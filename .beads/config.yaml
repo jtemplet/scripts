@@ -1,3 +1,5 @@
 issue-prefix: scripts
 sync:
     remote: "git+ssh://git@github.com/jtemplet/scripts.git"
+export:
+    auto: true
