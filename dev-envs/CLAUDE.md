@@ -49,8 +49,8 @@ Two consequences follow, and they are why it is a separate module:
 ### Via Terminal
 
 ```bash
-~/local/src/scripts/dev-envs/configs/work.sh
-~/local/src/scripts/dev-envs/configs/bodyledger.sh
+~/Dev/scripts/dev-envs/configs/work.sh
+~/Dev/scripts/dev-envs/configs/bodyledger.sh
 ```
 
 ## Adding New Environments

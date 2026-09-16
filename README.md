@@ -35,14 +35,14 @@ See [dev-envs/CLAUDE.md](dev-envs/CLAUDE.md) for detailed documentation.
 **Usage via Terminal**:
 
 ```bash
-~/local/src/scripts/dev-envs/configs/work.sh
-~/local/src/scripts/dev-envs/configs/bodyledger.sh
+~/Dev/scripts/dev-envs/configs/work.sh
+~/Dev/scripts/dev-envs/configs/bodyledger.sh
 ```
 
 **Install Alfred Workflow**:
 
 ```bash
-open ~/local/src/scripts/dev-envs/alfred/dev-environments.alfredworkflow
+open ~/Dev/scripts/dev-envs/alfred/dev-environments.alfredworkflow
 ```
 
 ### HAML/Tailwind Utilities

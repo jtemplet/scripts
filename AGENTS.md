@@ -85,7 +85,7 @@ Usage via Alfred:
 - `open work` - LoanLabs development environment
 - `open bodyledger`, `open atlas`, `open compass`, `open scripts` - Personal projects
 
-Usage via terminal: `~/local/src/scripts/dev-envs/configs/work.sh`
+Usage via terminal: `~/Dev/scripts/dev-envs/configs/work.sh`
 
 ## Key Scripts
 
