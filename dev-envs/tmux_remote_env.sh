@@ -6,6 +6,11 @@
 #                      --root /Users/jason/Code/factory \
 #                      --windows "claude:.:claude" "test:rails:" "git:.:git status"
 #
+# --remote-shell picks the login shell used to build the session (default:
+# fish), so PATH, mise, rbenv, and the like resolve the way an interactive
+# session on that host would. Set it to the remote's actual login shell
+# (zsh, bash) when fish is not installed there.
+#
 # Window spec: name:subdir:command   (subdir relative to --root, "." = root;
 # empty command just lands you in the directory)
 #
@@ -20,14 +25,16 @@ SESSION=""
 ROOT=""
 WINDOWS=()
 ATTACH=1
+REMOTE_SHELL="fish"
 
-usage() { sed -n '2,14p' "$0" | sed 's/^# \{0,1\}//'; exit "${1:-0}"; }
+usage() { sed -n '2,18p' "$0" | sed 's/^# \{0,1\}//'; exit "${1:-0}"; }
 
 while [ $# -gt 0 ]; do
   case "$1" in
     --host)     HOST="$2"; shift 2 ;;
     --session)  SESSION="$2"; shift 2 ;;
     --root)     ROOT="$2"; shift 2 ;;
+    --remote-shell) REMOTE_SHELL="$2"; shift 2 ;;
     --no-attach) ATTACH=0; shift ;;
     -h|--help)  usage 0 ;;
     --windows)  shift; while [ $# -gt 0 ] && [[ "$1" != --* ]]; do WINDOWS+=("$1"); shift; done ;;
@@ -69,20 +76,20 @@ remote_script() {
 }
 
 echo "==> Ensuring tmux session '$SESSION' on $HOST"
-remote_script | ssh "$HOST" "fish -l -c 'bash -s'"
+remote_script | ssh "$HOST" "$REMOTE_SHELL -l -c 'bash -s'"
 
 echo "==> Windows now on $HOST:"
-ssh "$HOST" "tmux list-windows -t '$SESSION' -F '    #{window_index}: #{window_name}'"
+ssh "$HOST" "$REMOTE_SHELL -l -c \"tmux list-windows -t '$SESSION' -F '    #{window_index}: #{window_name}'\""
 
 if [ "$ATTACH" = 1 ]; then
   echo "==> Attaching iTerm2 in control mode"
   osascript <<APPLESCRIPT
 tell application "iTerm2"
-  create window with default profile command "ssh -t $HOST tmux -CC attach -t $SESSION"
+  create window with default profile command "ssh -t $HOST \"$REMOTE_SHELL -l -c 'tmux -CC attach -t $SESSION'\""
   activate
 end tell
 APPLESCRIPT
 else
   echo "==> Skipping attach. Connect with:"
-  echo "    ssh -t $HOST tmux -CC attach -t $SESSION"
+  echo "    ssh -t $HOST \"$REMOTE_SHELL -l -c 'tmux -CC attach -t $SESSION'\""
 fi
