@@ -6,3 +6,6 @@
 .dolt/
 .beads-credential-key
 .beads/proxieddb/
+
+# bd 1.3.0 gate lock
+*.gate.lock*
